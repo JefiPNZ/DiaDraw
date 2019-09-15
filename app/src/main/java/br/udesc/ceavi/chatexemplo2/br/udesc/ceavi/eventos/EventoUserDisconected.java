@@ -27,10 +27,9 @@ public class EventoUserDisconected extends Evento {
 
             String sNome = oDados.getString("username");
 
-            Toast.makeText(oContexto, sNome + " deixou-nos", Toast.LENGTH_LONG);
-//            MainActivity m = (MainActivity) oContexto;
-//
-//            m.informativo(sNome, "deixou-nos");
+//            Toast.makeText(oContexto, sNome + " deixou-nos", Toast.LENGTH_LONG);
+            MainActivity m = (MainActivity) oContexto;
+            m.informativo(sNome, "deixou-nos");
 
         } catch (JSONException e) {
             Log.e(TAG, "erro", e);

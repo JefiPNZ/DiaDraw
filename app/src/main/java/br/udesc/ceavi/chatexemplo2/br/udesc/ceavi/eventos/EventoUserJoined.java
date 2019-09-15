@@ -27,10 +27,8 @@ public class EventoUserJoined extends Evento {
 
             String sNome = oDados.getString("username");
 
-            Toast.makeText(oContexto, sNome + " juntou-se a nós", Toast.LENGTH_LONG);
-//            MainActivity m = (MainActivity) oContexto;
-//
-//            m.informativo(sNome, "juntou-se a nós");
+            MainActivity m = (MainActivity) oContexto;
+            m.informativo(sNome, "juntou-se a nós");
 
         } catch (JSONException e) {
             Log.e(TAG, "erro", e);

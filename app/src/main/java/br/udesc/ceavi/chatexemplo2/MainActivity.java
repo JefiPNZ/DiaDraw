@@ -199,14 +199,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    public void informativo(final String sUserName, final String sMensagem) {
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Toast.makeText(MainActivity.this, sUserName + ", " + sMensagem, Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
+    public void informativo(final String sUserName, final String sMensagem) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, sUserName + ", " + sMensagem, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     @Override
     protected void onDestroy() {

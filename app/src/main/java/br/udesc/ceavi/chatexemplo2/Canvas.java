@@ -63,7 +63,7 @@ public class Canvas extends View {
     public void setPonto(int x, int y) {
         pontos.add(new Point(x, y));
         MainActivity m = (MainActivity) con;
-        m.enviarPontos(pontoss);
+        m.enviarPontos(pontos);
     }
 
     public void apagar() {
