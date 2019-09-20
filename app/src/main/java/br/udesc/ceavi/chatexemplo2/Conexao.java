@@ -8,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.List;
 
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.Evento;
@@ -18,6 +19,7 @@ import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPintura;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -28,26 +30,27 @@ public class Conexao {
     private static Conexao oInstance;
 
     private final String URL_PADRAO       = "http://localhost:3333";
-    private final String MENSAGEM         = "sMSG";
-    private final String ADD_USER         = "addUser";
-    private final String USER_DISCONECTED = "uDesconectado";
-    private final String USER_CONECTED    = "uConectado";
-    private final String PONTOS           = "pontos";
+    public static final String MENSAGEM         = "sMSG";
+    public static final String ADD_USER         = "addUser";
+    public static final String USER_DISCONECTED = "uDesconectado";
+    public static final String USER_CONECTED    = "uConectado";
+    public static final String PONTOS           = "pontos";
+
+    private HashMap<String, ModelUsuario> usuarios;
 
     private Socket  oSocket;
     private Context oContext;
     private String  sHost;
     private String  sPorta;
 
-    private EventoUserDisconected oUserDisconected;
     private EventoConectar        oConectar;
     private EventoDesconectar     oDesconectar;
     private EventoConexaoErro     oConexaoErro;
     private EventoMensagem        oMensagem;
-    private EventoUserJoined      oUserJoined;
-    private EventoPintura         oPintura;
 
-    private Conexao() {}
+    private Conexao() {
+        usuarios = new HashMap<>();
+    }
 
     public static Conexao getInstance() {
         if(oInstance == null) {
@@ -61,13 +64,10 @@ public class Conexao {
     }
 
     private void defineEventos() {
-        oUserDisconected = new EventoUserDisconected(oContext);
         oConectar        = new EventoConectar(oContext);
         oDesconectar     = new EventoDesconectar(oContext);
         oConexaoErro     = new EventoConexaoErro(oContext);
         oMensagem        = new EventoMensagem(oContext);
-        oUserJoined      = new EventoUserJoined(oContext);
-        oPintura         = new EventoPintura(oContext);
     }
 
     public void setHost(String sHost) {
@@ -84,23 +84,49 @@ public class Conexao {
             defineEventos();
 
             oSocket = IO.socket("http://" + this.sHost + ":" + this.sPorta);
-//            oSocket = IO.socket(URL_PADRAO);
 
             oSocket.on(Socket.EVENT_CONNECT        , oConectar);
             oSocket.on(Socket.EVENT_DISCONNECT     , oDesconectar);
             oSocket.on(Socket.EVENT_CONNECT_ERROR  , oConexaoErro);
             oSocket.on(Socket.EVENT_CONNECT_TIMEOUT, oConexaoErro);
 
-            oSocket.on(MENSAGEM        , oMensagem);//recebe as mensagens
-            oSocket.on(USER_CONECTED   , oUserJoined);//recebe as mensagens
-            oSocket.on(USER_DISCONECTED, oUserDisconected);//recebe as mensagens
-            oSocket.on(PONTOS          , oPintura);
-
             oSocket.connect();
 
         } catch (URISyntaxException e) {
             Log.e(TAG, "erro na classe Conexao", e);
         }
+    }
+
+    public void adicionaUsuario(ModelUsuario usuario) {
+        if(usuario.getNome().equals("")) {
+            return;
+        }
+        usuarios.put(usuario.getNome(), usuario);
+    }
+
+    public void atualizaCoordenadasUsuario(String nome, List<Point> pontos) {
+
+        if(!usuarios.containsKey(nome) && !nome.equals("")) {
+            ModelUsuario usuario = new ModelUsuario();
+            usuario.setNome(nome);
+            usuario.setPontos(pontos);
+            adicionaUsuario(usuario);
+        } else {
+            ModelUsuario usuario = usuarios.get(nome);
+            usuario.setPontos(pontos);
+        }
+    }
+
+    public boolean possuiUsuario(String nome) {
+        return usuarios.containsKey(nome);
+    }
+
+    public HashMap getUsuarios() {
+        return usuarios;
+    }
+
+    public Socket getSocket() {
+        return oSocket;
     }
 
     public void desconectar() {

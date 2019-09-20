@@ -10,6 +10,9 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
+import io.socket.client.Socket;
+
 public class ChatActivity extends AppCompatActivity {
 
     private TextView tvAreaTexto;
@@ -19,19 +22,21 @@ public class ChatActivity extends AppCompatActivity {
     private Conexao oCon;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
 
         tvAreaTexto = findViewById(R.id.tvAreaTexto);
         input       = findViewById(R.id.input);
-        btnEnviar   = findViewById(R.id.btnConectar);
+        btnEnviar   = findViewById(R.id.btnEnviar);
 
         oCon = Conexao.getInstance();
 
+        Socket socket = oCon.getSocket();
+        socket.on(Conexao.MENSAGEM, new EventoMensagem(this));
+
         eventosTela();
     }
-
 
     private void eventosTela() {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
@@ -40,14 +45,6 @@ public class ChatActivity extends AppCompatActivity {
                 enviar();
             }
         });
-
-//        btnLogar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent oTransicao = new Intent(MainActivity.this, LoginActivity.class);
-//                startActivity(oTransicao);
-//            }
-//        });
     }
 
 

@@ -26,6 +26,10 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPintura;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -33,11 +37,6 @@ import io.socket.emitter.Emitter;
 public class MainActivity extends AppCompatActivity {
 
     private Conexao oCon;
-
-    private TextView tvStatus;
-    private TextView tvChatInput;
-    private Button   btnEnviar;
-    private Button   btnLogar;
 
     private FloatingActionButton fBtnChat;
     private FloatingActionButton fBtnBorracha;
@@ -54,10 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
         fBtnBorracha = findViewById(R.id.fBtnBorracha);
         fBtnChat     = findViewById(R.id.fBtnChat);
-//        tvStatus    = findViewById(R.id.tvStatus);
-//        tvChatInput = findViewById(R.id.tvChatInput);
-//        btnEnviar   = findViewById(R.id.btnEnviar);
-//        btnLogar    = findViewById(R.id.btnLogar);
 
         iniciarConexao();
 
@@ -89,6 +84,13 @@ public class MainActivity extends AppCompatActivity {
         oCon.setPorta(login.getStringExtra("porta"));
         oCon.conectar();
 
+        Socket socket = oCon.getSocket();
+
+        socket.on(Conexao.USER_CONECTED   , new EventoUserJoined(this));//recebe as mensagens
+        socket.on(Conexao.USER_DISCONECTED, new EventoUserDisconected(this));//recebe as mensagens
+        socket.on(Conexao.PONTOS          , new EventoPintura(this));
+
+
         oCon.conectarUsuario(login.getStringExtra("username"));
     }
 
@@ -103,23 +105,11 @@ public class MainActivity extends AppCompatActivity {
         fBtnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent oTransicao = new Intent(MainActivity.this, ChatActivity.class);
 
+                startActivity(oTransicao);
             }
         });
-//        btnEnviar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                enviar();
-//            }
-//        });
-
-//        btnLogar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent oTransicao = new Intent(MainActivity.this, LoginActivity.class);
-//                startActivity(oTransicao);
-//            }
-//        });
     }
 
     @Override
@@ -159,31 +149,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void enviar() {
-        String sMsg = tvChatInput.getText().toString();
-        if(TextUtils.isEmpty(sMsg)) {
-            return;
-        }
-
-        tvChatInput.setText("");
-        oCon.enviarMensagem(sMsg);
-    }
-
-    public void anexarMensagem(final String sNome, final String sMsg) {
+    public void pintar() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvStatus.append("\n" + sNome + ": " + sMsg + "\n");
-            }
-        });
-    }
-
-    public void pintar(final List<Point> pontos) {
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-
-                canvas.setPontos(pontos);
+//                canvas.setPontos(pontos);
                 canvas.invalidate();
                 Log.d("wsdsds", "repintar");
             }

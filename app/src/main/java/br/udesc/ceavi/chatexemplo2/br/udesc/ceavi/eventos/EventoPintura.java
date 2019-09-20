@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.udesc.ceavi.chatexemplo2.Conexao;
 import br.udesc.ceavi.chatexemplo2.MainActivity;
 
 public class EventoPintura extends Evento {
@@ -26,19 +27,23 @@ public class EventoPintura extends Evento {
         try {
             JSONObject oDados = (JSONObject) args[0];
 
+
+            String sNome = oDados.getString("username");
+
             JSONArray ponto = oDados.getJSONArray("pontos");
 
 
             List<Point> p = new ArrayList<>();
 
-//            p.add(new Point(ponto.getInt("x"), ponto.getInt("y")));
 
             for(int i = 0; i < ponto.length(); i++) {
                 p.add(new Point(ponto.getJSONObject(i).getInt("x"), ponto.getJSONObject(i).getInt("y")));
             }
 
+            Conexao.getInstance().atualizaCoordenadasUsuario(sNome, p);
+
             MainActivity m = (MainActivity) oContexto;
-            m.pintar(p);
+            m.pintar();
         } catch (JSONException e) {
             Log.e(TAG, "erro", e);
         }

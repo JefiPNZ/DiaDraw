@@ -7,7 +7,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.udesc.ceavi.chatexemplo2.Conexao;
 import br.udesc.ceavi.chatexemplo2.MainActivity;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
 
 public class EventoUserJoined extends Evento {
 
@@ -27,11 +29,21 @@ public class EventoUserJoined extends Evento {
 
             String sNome = oDados.getString("username");
 
+            incluirUsuario(sNome);
+
             MainActivity m = (MainActivity) oContexto;
             m.informativo(sNome, "juntou-se a nós");
 
         } catch (JSONException e) {
             Log.e(TAG, "erro", e);
         }
+    }
+
+    private void incluirUsuario(String nome) {
+        Conexao oCon = Conexao.getInstance();
+        ModelUsuario usuario = new ModelUsuario();
+        usuario.setNome(nome);
+
+        oCon.adicionaUsuario(usuario);
     }
 }

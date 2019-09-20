@@ -9,7 +9,11 @@ import android.util.TypedValue;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
 
 public class Canvas extends View {
 
@@ -17,11 +21,13 @@ public class Canvas extends View {
     private List<Point> pontos;
     private List<Point> pontoss;
     private Context con;
+    private Conexao conex;
 
     public Canvas(Context context) {
         super(context);
 
         con = context;
+        conex = Conexao.getInstance();
         pintura = new Paint();
 
         pintura.setColor(Color.GREEN);
@@ -35,7 +41,7 @@ public class Canvas extends View {
     @Override
     protected void onDraw(android.graphics.Canvas canvas) {
         super.onDraw(canvas);
-
+//
         if(pontos.size() > 0) {
 
             for(Point p : pontos) {
@@ -43,6 +49,20 @@ public class Canvas extends View {
             }
         }
 
+//        if(conex.getUsuarios().size() > 0) {
+//            Map<String, ModelUsuario> usuarios = conex.getUsuarios();
+//            for(Map.Entry<String, ModelUsuario> p : usuarios.entrySet()) {
+//                List<Point> uPontos = p.getValue().getPontos();
+//                if(uPontos.size() == 0) {
+//                    continue;
+//                }
+//                for(Point ponto : uPontos) {
+//                    canvas.drawPoint(ponto.x, ponto.y-50, pintura);
+//                }
+//            }
+//        }
+
+        int i = 0;
 
     }
 
