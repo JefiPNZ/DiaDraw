@@ -1,6 +1,7 @@
 package br.udesc.ceavi.chatexemplo2;
 
 import android.content.Context;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.util.Log;
 
@@ -34,7 +35,9 @@ public class Conexao {
     public static final String ADD_USER         = "addUser";
     public static final String USER_DISCONECTED = "uDesconectado";
     public static final String USER_CONECTED    = "uConectado";
-    public static final String PONTOS           = "pontos";
+    public static final String O_PONTO          = "ponto_origem";
+    public static final String D_PONTO          = "ponto_destino";
+    public static final String APAGAR           = "apagar";
 
     private HashMap<String, ModelUsuario> usuarios;
 
@@ -68,6 +71,29 @@ public class Conexao {
         oDesconectar     = new EventoDesconectar(oContext);
         oConexaoErro     = new EventoConexaoErro(oContext);
         oMensagem        = new EventoMensagem(oContext);
+    }
+
+    private JSONObject getJsonObject(float x, float y) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("x", x);
+            obj.put("y", y);
+        } catch (Exception ex) {
+            Log.e(TAG, "erro na atribuição de valor ao objeto json", ex);
+        }
+        return obj;
+    }
+
+    private ModelUsuario getUsuario(String nome) {
+        ModelUsuario usuario = null;
+        if(!usuarios.containsKey(nome) && !nome.equals("")) {
+            usuario = new ModelUsuario();
+            usuario.setNome(nome);
+            adicionaUsuario(usuario);
+        } else {
+            usuario = usuarios.get(nome);
+        }
+        return usuario;
     }
 
     public void setHost(String sHost) {
@@ -104,17 +130,14 @@ public class Conexao {
         usuarios.put(usuario.getNome(), usuario);
     }
 
-    public void atualizaCoordenadasUsuario(String nome, List<Point> pontos) {
+    public void atualizaPontoInicialUsuario(String nome, float x, float y) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.setPontoInicial(x, y);
+    }
 
-        if(!usuarios.containsKey(nome) && !nome.equals("")) {
-            ModelUsuario usuario = new ModelUsuario();
-            usuario.setNome(nome);
-            usuario.setPontos(pontos);
-            adicionaUsuario(usuario);
-        } else {
-            ModelUsuario usuario = usuarios.get(nome);
-            usuario.setPontos(pontos);
-        }
+    public void atualizaPontoDestinoUsuario(String nome, float x, float y) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.setPontoLinhaDestino(x, y);
     }
 
     public boolean possuiUsuario(String nome) {
@@ -138,26 +161,30 @@ public class Conexao {
         oSocket.emit(MENSAGEM, sMen);
     }
 
-    public void enviarPontos(List<Point> pontos) {
+    /**
+     * Os pontos onde a linha sera iniciada
+     *
+     * @param x
+     * @param y
+     */
+    public void enviarPontoInicioLinha(float x, float y) {
+        oSocket.emit(O_PONTO, getJsonObject(x, y));
+    }
 
-        JSONObject[] objetos = new JSONObject[pontos.size()];
+    /**
+     * Para onde a linha vai após o ponto inicial
+     */
+    public void enviarPontoDestinoLinha(float x, float y) {
+        oSocket.emit(D_PONTO, getJsonObject(x, y));
+    }
 
-        try {
-            int cont = 0;
-            for(Point p : pontos) {
-                JSONObject obj = new JSONObject();
+    public void apagarCaminhoUsuario(String nome) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.apagarCaminho();
+    }
 
-                obj.put("x", p.x);
-                obj.put("y", p.y);
-
-                objetos[cont] = obj;
-                cont++;
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, "erro", e);
-        }
-
-        oSocket.emit(PONTOS, objetos);
+    public void solicitaApagarCaminhoUsuario() {
+        oSocket.emit(APAGAR);
     }
 
     public void conectarUsuario(String userName) {

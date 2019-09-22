@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
+import android.graphics.Path;
 import android.graphics.Point;
 import android.net.nsd.NsdServiceInfo;
 import android.os.Bundle;
@@ -26,8 +27,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoApagar;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPintura;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoDestino;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoOrigem;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
 import io.socket.client.IO;
@@ -59,15 +63,6 @@ public class MainActivity extends AppCompatActivity {
         constrainLayout = findViewById(R.id.lt);
         constrainLayout.addView(canvas = new Canvas(this));
 
-//
-//        List<Point> pontos = new ArrayList<>();
-//
-//        pontos.add(new Point(50, 100));
-//        pontos.add(new Point(300, 200));
-//        pontos.add(new Point(250, 150));
-//
-//        pintar(pontos);
-
         canvas.invalidate();
         constrainLayout.invalidate();
         constrainLayout.requestLayout();
@@ -88,8 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
         socket.on(Conexao.USER_CONECTED   , new EventoUserJoined(this));//recebe as mensagens
         socket.on(Conexao.USER_DISCONECTED, new EventoUserDisconected(this));//recebe as mensagens
-        socket.on(Conexao.PONTOS          , new EventoPintura(this));
-
+        socket.on(Conexao.O_PONTO         , new EventoPontoOrigem(this));
+        socket.on(Conexao.D_PONTO         , new EventoPontoDestino(this));
+        socket.on(Conexao.APAGAR          , new EventoApagar(this));
 
         oCon.conectarUsuario(login.getStringExtra("username"));
     }
@@ -106,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent oTransicao = new Intent(MainActivity.this, ChatActivity.class);
-
                 startActivity(oTransicao);
             }
         });
@@ -119,13 +114,15 @@ public class MainActivity extends AppCompatActivity {
 
         switch(action) {
             case (MotionEvent.ACTION_DOWN) :
+                //define o ponto  onde o caminho começa
+                canvas.moverPara((int)event.getX(), (int)event.getY());
+                canvas.invalidate();
+
                 Log.d("teste","Action was DOWN");
                 return true;
             case (MotionEvent.ACTION_MOVE) :
-//                event.get
-//                canvas.setX(event.getX());
-//                canvas.setY(event.getY());
-                canvas.setPonto((int)event.getX(), (int)event.getY());
+                //desenha um caminho a partir do ponto inicial
+                canvas.linhaPara((int)event.getX(), (int)event.getY());
                 canvas.invalidate();
 
                 Log.d("teste","Action was MOVE");
@@ -135,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("Y com cast","" + (int)event.getY());
                 return true;
             case (MotionEvent.ACTION_UP) :
+
                 Log.d("teste","Action was UP");
                 return true;
             case (MotionEvent.ACTION_CANCEL) :
@@ -153,18 +151,43 @@ public class MainActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                canvas.setPontos(pontos);
                 canvas.invalidate();
                 Log.d("wsdsds", "repintar");
             }
         });
     }
 
-    public void enviarPontos(final List<Point> pontos) {
+    public void atualizaCanvas() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                oCon.enviarPontos(pontos);
+                canvas.invalidate();
+            }
+        });
+    }
+
+    public void enviarPontoInicial(final float x, final float y) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oCon.enviarPontoInicioLinha(x, y);
+            }
+        });
+    }
+
+    public void enviarPontoDestino(final float x, final float y) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oCon.enviarPontoDestinoLinha(x, y);
+            }
+        });
+    }
+    public void apagarCaminho() {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oCon.solicitaApagarCaminhoUsuario();
             }
         });
     }
@@ -181,7 +204,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         oCon.desconectar();
     }
 }

@@ -1,5 +1,6 @@
 package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model;
 
+import android.graphics.Path;
 import android.graphics.Point;
 
 import java.util.List;
@@ -7,9 +8,11 @@ import java.util.List;
 public class ModelUsuario {
 
     private String nome;
-    private List<Point> pontos;
+    private Path   caminho;
 
-    public ModelUsuario() {}
+    public ModelUsuario() {
+        caminho = new Path();
+    }
 
     public void setNome(String nome) {
         this.nome = nome;
@@ -19,11 +22,19 @@ public class ModelUsuario {
         return nome;
     }
 
-    public void setPontos(List<Point> pontos) {
-        this.pontos = pontos;
+    public void setPontoInicial(float x, float y) {
+        caminho.lineTo(x, y);
     }
 
-    public List<Point> getPontos() {
-        return pontos;
+    public void setPontoLinhaDestino(float x, float y) {
+        caminho.moveTo(x, y);
+    }
+
+    public void apagarCaminho() {
+        caminho.reset();
+    }
+
+    public Path getCaminho() {
+        return caminho;
     }
 }

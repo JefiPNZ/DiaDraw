@@ -5,17 +5,22 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelAdapterMensagem;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelMensagem;
 import io.socket.client.Socket;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private TextView tvAreaTexto;
+    private ModelAdapterMensagem oAdapterMensagem;
+    private ListView ltView;
+
     private EditText input;
     private Button   btnEnviar;
 
@@ -26,12 +31,17 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat);
 
-        tvAreaTexto = findViewById(R.id.tvAreaTexto);
+
+        oAdapterMensagem = new ModelAdapterMensagem(this);
+
+        ltView = findViewById(R.id.ltView);
+
         input       = findViewById(R.id.input);
         btnEnviar   = findViewById(R.id.btnEnviar);
 
         oCon = Conexao.getInstance();
 
+        ltView.setAdapter(oAdapterMensagem);
         Socket socket = oCon.getSocket();
         socket.on(Conexao.MENSAGEM, new EventoMensagem(this));
 
@@ -54,6 +64,7 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
+        anexarMensagem("this", sMsg);
         input.setText("");
         oCon.enviarMensagem(sMsg);
     }
@@ -62,7 +73,10 @@ public class ChatActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tvAreaTexto.append("\n" + sNome + ": " + sMsg + "\n");
+                ModelMensagem m = new ModelMensagem(sNome, sMsg);
+                oAdapterMensagem.addMensagem(m);
+                oAdapterMensagem.notifyDataSetChanged();
+                ltView.setSelection(ltView.getCount() - 1);
             }
         });
     }
