@@ -123,6 +123,10 @@ public class Conexao {
         }
     }
 
+    public void removeUsuario(String nome) {
+        this.usuarios.remove(nome);
+    }
+
     public void adicionaUsuario(ModelUsuario usuario) {
         if(usuario.getNome().equals("")) {
             return;

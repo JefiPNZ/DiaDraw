@@ -27,12 +27,6 @@ public class EventoMensagem extends Evento {
             String sNome = oDados.getString("username");
             String sMsg  = oDados.getString("msg");
 
-            if(!Conexao.getInstance().possuiUsuario(sNome)) {
-                ModelUsuario usuario = new ModelUsuario();
-                usuario.setNome(sNome);
-                Conexao.getInstance().adicionaUsuario(usuario);
-            }
-
             ChatActivity m = (ChatActivity) oContexto;
 
             m.anexarMensagem(sNome, sMsg);
