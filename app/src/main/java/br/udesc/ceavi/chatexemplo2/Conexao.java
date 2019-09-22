@@ -187,7 +187,7 @@ public class Conexao {
         oSocket.emit(APAGAR);
     }
 
-    public void conectarUsuario(String userName) {
-        oSocket.emit(ADD_USER, userName);
+    public void conectarUsuario(String userName, int cor) {
+        oSocket.emit(ADD_USER, userName, cor);
     }
 }

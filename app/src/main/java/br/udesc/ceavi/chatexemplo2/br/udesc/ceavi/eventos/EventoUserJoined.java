@@ -28,8 +28,9 @@ public class EventoUserJoined extends Evento {
             JSONObject oDados = (JSONObject) args[0];
 
             String sNome = oDados.getString("username");
+            int    cor = oDados.getInt("color");
 
-            incluirUsuario(sNome);
+            incluirUsuario(sNome, cor);
 
             MainActivity m = (MainActivity) oContexto;
             m.informativo(sNome, "juntou-se a nós");
@@ -39,10 +40,11 @@ public class EventoUserJoined extends Evento {
         }
     }
 
-    private void incluirUsuario(String nome) {
+    private void incluirUsuario(String nome, int cor) {
         Conexao oCon = Conexao.getInstance();
         ModelUsuario usuario = new ModelUsuario();
         usuario.setNome(nome);
+        usuario.setCor(cor);
 
         oCon.adicionaUsuario(usuario);
     }

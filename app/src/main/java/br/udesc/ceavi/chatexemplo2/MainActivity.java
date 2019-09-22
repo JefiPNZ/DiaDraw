@@ -34,6 +34,7 @@ import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoDestino;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoOrigem;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
 import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
+import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         socket.on(Conexao.D_PONTO         , new EventoPontoDestino(this));
         socket.on(Conexao.APAGAR          , new EventoApagar(this));
 
-        oCon.conectarUsuario(login.getStringExtra("username"));
+        oCon.conectarUsuario(login.getStringExtra("username"), ModelUsuario.getCorAleatoria());
     }
 
     private void eventosTela() {

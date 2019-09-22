@@ -64,7 +64,7 @@ public class ChatActivity extends AppCompatActivity {
             return;
         }
 
-        anexarMensagem("this", sMsg);
+//        anexarMensagem("this", sMsg);
         input.setText("");
         oCon.enviarMensagem(sMsg);
     }

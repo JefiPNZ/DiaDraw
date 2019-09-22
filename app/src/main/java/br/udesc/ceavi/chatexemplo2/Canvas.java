@@ -29,12 +29,9 @@ public class Canvas extends View {
         conex   = Conexao.getInstance();
         pintura = new Paint();
 
-//        pintura.setAntiAlias(true);
-        pintura.setColor(Color.GREEN);
+        pintura.setColor(Color.BLACK);
         pintura.setStyle(Paint.Style.STROKE);
         pintura.setStrokeWidth(5f);
-//        pintura.setStrokeJoin(Paint.Join.ROUND);
-
 
         caminho = new Path();
     }
@@ -45,6 +42,9 @@ public class Canvas extends View {
 
         canvas.drawPath(caminho, pintura);
 
+        Paint pinturaUsuario = new Paint();
+        pinturaUsuario.setStyle(Paint.Style.STROKE);
+        pinturaUsuario.setStrokeWidth(5f);
         if(conex.getUsuarios().size() > 0) {
             Map<String, ModelUsuario> usuarios = conex.getUsuarios();
             for(Map.Entry<String, ModelUsuario> par : usuarios.entrySet()) {
@@ -52,7 +52,8 @@ public class Canvas extends View {
                 if(uCaminho == null) {
                     continue;
                 }
-                canvas.drawPath(uCaminho, pintura);
+                pinturaUsuario.setColor(par.getValue().getCor());
+                canvas.drawPath(uCaminho, pinturaUsuario);
             }
         }
     }
