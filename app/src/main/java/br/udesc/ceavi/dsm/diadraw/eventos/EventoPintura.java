@@ -1,19 +1,12 @@
-package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos;
+package br.udesc.ceavi.dsm.diadraw.eventos;
 
 import android.content.Context;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import br.udesc.ceavi.chatexemplo2.Conexao;
-import br.udesc.ceavi.chatexemplo2.MainActivity;
+import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
 
 public class EventoPintura extends Evento {
 

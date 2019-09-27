@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="br.udesc.ceavi.chatexemplo2">
+    package="br.udesc.ceavi.diadraw.activities">
     <uses-permission
         android:required="true"
         android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -21,9 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ChatActivity" android:windowSoftInputMode="stateVisible|adjustResize" ></activity>
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".LoginActivity">
+        <activity android:name="br.udesc.ceavi.dsm.diadraw.activities.ChatActivity" android:windowSoftInputMode="stateVisible|adjustResize" ></activity>
+        <activity android:name="br.udesc.ceavi.dsm.diadraw.activities.MainActivity"></activity>
+        <activity android:name="br.udesc.ceavi.dsm.diadraw.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

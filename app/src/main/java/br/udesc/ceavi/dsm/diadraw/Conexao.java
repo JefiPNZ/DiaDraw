@@ -1,26 +1,18 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw;
 
 import android.content.Context;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.util.Log;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.Evento;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoConectar;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoConexaoErro;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoDesconectar;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPintura;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoConectar;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoConexaoErro;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoDesconectar;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoMensagem;
+import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
@@ -46,10 +38,10 @@ public class Conexao {
     private String  sHost;
     private String  sPorta;
 
-    private EventoConectar        oConectar;
-    private EventoDesconectar     oDesconectar;
-    private EventoConexaoErro     oConexaoErro;
-    private EventoMensagem        oMensagem;
+    private EventoConectar oConectar;
+    private EventoDesconectar oDesconectar;
+    private EventoConexaoErro oConexaoErro;
+    private EventoMensagem oMensagem;
 
     private Conexao() {
         usuarios = new HashMap<>();

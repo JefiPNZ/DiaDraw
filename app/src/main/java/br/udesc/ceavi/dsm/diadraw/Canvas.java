@@ -1,18 +1,15 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
-import android.util.Log;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
+import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
+import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
 
 public class Canvas extends View {
 

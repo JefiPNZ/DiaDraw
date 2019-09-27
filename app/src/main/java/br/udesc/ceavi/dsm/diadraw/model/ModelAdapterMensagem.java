@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model;
+package br.udesc.ceavi.dsm.diadraw.model;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -6,16 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.udesc.ceavi.chatexemplo2.R;
+import br.udesc.ceavi.diadraw.activities.R;
 
 public class ModelAdapterMensagem extends BaseAdapter {
 

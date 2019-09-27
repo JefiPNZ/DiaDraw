@@ -1,43 +1,27 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw.activities;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import android.content.Intent;
-import android.graphics.Path;
-import android.graphics.Point;
-import android.net.nsd.NsdServiceInfo;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoApagar;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPintura;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoDestino;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoPontoOrigem;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserDisconected;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoUserJoined;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
-import io.socket.client.IO;
+import br.udesc.ceavi.diadraw.activities.R;
+import br.udesc.ceavi.dsm.diadraw.Canvas;
+import br.udesc.ceavi.dsm.diadraw.Conexao;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoApagar;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoDestino;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoOrigem;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoUserDisconected;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoUserJoined;
+import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw.activities;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -6,14 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos.EventoMensagem;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelAdapterMensagem;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelMensagem;
+import br.udesc.ceavi.diadraw.activities.R;
+import br.udesc.ceavi.dsm.diadraw.Conexao;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoMensagem;
+import br.udesc.ceavi.dsm.diadraw.model.ModelAdapterMensagem;
+import br.udesc.ceavi.dsm.diadraw.model.ModelMensagem;
 import io.socket.client.Socket;
 
 public class ChatActivity extends AppCompatActivity {

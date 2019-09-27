@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;

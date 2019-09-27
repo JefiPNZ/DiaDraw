@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model;
+package br.udesc.ceavi.dsm.diadraw.model;
 
 import android.graphics.Color;
 import android.graphics.Path;

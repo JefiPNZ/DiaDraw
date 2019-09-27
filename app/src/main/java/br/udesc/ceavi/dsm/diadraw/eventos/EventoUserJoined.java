@@ -1,15 +1,14 @@
-package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos;
+package br.udesc.ceavi.dsm.diadraw.eventos;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import br.udesc.ceavi.chatexemplo2.Conexao;
-import br.udesc.ceavi.chatexemplo2.MainActivity;
-import br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.model.ModelUsuario;
+import br.udesc.ceavi.dsm.diadraw.Conexao;
+import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
+import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
 
 public class EventoUserJoined extends Evento {
 

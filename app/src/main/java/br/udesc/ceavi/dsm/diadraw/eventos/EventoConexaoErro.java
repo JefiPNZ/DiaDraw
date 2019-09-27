@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2.br.udesc.ceavi.eventos;
+package br.udesc.ceavi.dsm.diadraw.eventos;
 
 import android.content.Context;
 import android.util.Log;

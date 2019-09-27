@@ -1,4 +1,4 @@
-package br.udesc.ceavi.chatexemplo2;
+package br.udesc.ceavi.dsm.diadraw.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import br.udesc.ceavi.diadraw.activities.R;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
