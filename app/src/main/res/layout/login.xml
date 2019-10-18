@@ -2,36 +2,76 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#DCDCDC"
+    android:padding="15dp">
+
+
+    <TextView
+        android:id="@+id/text_view_id"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textSize="25dp"
+        android:text="Nick"
+    />
 
     <EditText
         android:id="@+id/etNome"
+        android:paddingLeft="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/tela_entrada"
         android:ems="10"
+        android:hint="Insira o seu nick"
         android:inputType="textPersonName"
-        android:text="Name" />
+        android:text="Nome"
+     />
+    <TextView
+        android:id="@+id/text_view_2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textSize="25dp"
+        android:text="Servidor"
+    />
 
     <EditText
         android:id="@+id/etIp"
+        android:paddingLeft="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:background="@drawable/tela_entrada"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="192.168.0.104" />
 
+    <TextView
+        android:id="@+id/text_view_3"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="15dp"
+        android:textSize="25dp"
+        android:text="Porta"
+        />
     <EditText
         android:id="@+id/etPorta"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:paddingLeft="8dp"
+
         android:ems="10"
+        android:background="@drawable/tela_entrada"
         android:inputType="textPersonName"
         android:text="3000" />
 
     <Button
+        android:layout_marginTop="20dp"
         android:id="@+id/btnConectar"
+        android:background="@drawable/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Conectar" />
+        android:padding="20dp"
+        android:text="Conectar"/>
 
 </LinearLayout>
