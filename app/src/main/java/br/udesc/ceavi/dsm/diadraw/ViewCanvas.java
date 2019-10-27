@@ -2,6 +2,7 @@ package br.udesc.ceavi.dsm.diadraw;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -9,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,23 +21,26 @@ import java.util.Map;
 import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
 import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
 
-public class Canvas extends View {
+public class ViewCanvas extends View {
 
-    private Paint pintura;
-    private Paint pBitmap;
     private Context con;
     private Conexao conex;
 
     private Path caminho;
-    private Path caminhoApaga;
 
     public boolean apaga;
 
-    Bitmap bitmap;
+    private Paint pintura;
+    private Paint pBitmap;
 
-    android.graphics.Canvas cv;
+    private Bitmap bitBitmap;
+    private Canvas cvCanvas;
 
-    public Canvas(Context context) {
+    private float cX,
+                  cY;// pontos de controle
+
+
+    public ViewCanvas(Context context) {
         super(context);
 
         this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -49,13 +54,6 @@ public class Canvas extends View {
         pintura.setStrokeWidth(5f);
 
         caminho = new Path();
-        caminhoApaga = new Path();
-        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Display disp = wm.getDefaultDisplay();
-
-        DisplayMetrics metrics = new DisplayMetrics();
-
-        disp.getMetrics(metrics);
 
         pBitmap = new Paint(Paint.DITHER_FLAG);
 
@@ -64,9 +62,8 @@ public class Canvas extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        cv = new android.graphics.Canvas(bitmap);
-        cv.setBitmap(bitmap);
+        bitBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        cvCanvas = new Canvas(bitBitmap);
     }
 
     @Override
@@ -75,11 +72,12 @@ public class Canvas extends View {
 
 //        canvas.drawColor(Color.argb(255, 255, 0, 0));
 //
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        canvas.drawBitmap(bitBitmap, 0, 0, pBitmap);
 
+        canvas.drawPath(caminho, pintura);
 //        canvas.drawColor(Color.WHITE);
 //        canvas.drawBitmap(bitmap, 0, 0, null);
-        Paint p = new Paint();
+//        Paint p = new Paint();
 
 //        if(apaga) {
 //            pintura.setAlpha(0xFF);//transperent color
@@ -93,15 +91,15 @@ public class Canvas extends View {
 //        } else {
 //            pintura.setXfermode(null);
 //        }
-        p.setAlpha(0xFF);
+//        p.setAlpha(0xFF);
 //            p.setStrokeJoin(Paint.Join.ROUND);
 //            p.setStrokeCap(Paint.Cap.ROUND);
-        p.setStyle(Paint.Style.STROKE);
-        p.setStrokeWidth(10f);
-        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        cv.drawPath(caminhoApaga, p);
+//        p.setStyle(Paint.Style.STROKE);
+//        p.setStrokeWidth(10f);
+//        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//        cv.drawPath(caminhoApaga, p);
 
-        canvas.drawPath(caminho, pintura);
+//        canvas.drawPath(caminho, pintura);
 
 //
 //        Paint pinturaUsuario = new Paint();
@@ -127,34 +125,48 @@ public class Canvas extends View {
         return dp * context.getResources().getDisplayMetrics().density;
     }
 
-    public void linhaPara(float x, float y) {
-        if(apaga) {
-            caminhoApaga.lineTo(x, y);
-        } else {
-            caminho.lineTo(x, y-25);
-        }
-        MainActivity m = (MainActivity) con;
-        m.enviarPontoInicial(x, y);
+    public void linhaPara() {
+        caminho.lineTo(cX, cY);
+        cvCanvas.drawPath(caminho, pintura);
+        caminho.reset();
+//        MainActivity m = (MainActivity) con;
+//        m.enviarPontoInicial(x, y);
     }
 
     public void moverPara(float x, float y) {
-        if(apaga) {
-            caminhoApaga.moveTo(x, y-25);
-        } else {
+        caminho.reset();
+        caminho.moveTo(x, y);
+        cX = x;
+        cY = y;
+//        MainActivity m = (MainActivity) con;
+//        m.enviarPontoDestino(x, y);
+    }
 
-            caminho.moveTo(x, y-25);
-        }
-
-        MainActivity m = (MainActivity) con;
-        m.enviarPontoDestino(x, y);
+    /*
+    * Necessario fazer dessa forma pois o caminho esta sempre sendo resetado, e so for usado o
+    * moveTo e lineTo, ele pega o ponto 0,0 na tela e desenha a linha errada
+    */
+    public void mover(float x, float y) {
+        float dx = Math.abs(x - cX);
+        float dy = Math.abs(y - cY);
+        caminho.quadTo(cX, cY, (x + cX)/2, ((y) + cY)/2);
+        cX = x;
+        cY = y;
     }
 
     public void apagar() {
-        caminho.reset();
-        MainActivity m = (MainActivity) con;
-        m.apagarCaminho();
+        if(apaga){
+            pintura.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            pintura.setStrokeWidth(10f);
+        } else {
+            pintura.setXfermode(null);
+            pintura.setStrokeWidth(5f);
+        }
+//        caminho.reset();
+//        MainActivity m = (MainActivity) con;
+//        m.apagarCaminho();
     }
-
+//
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float x = event.getX();
@@ -162,11 +174,29 @@ public class Canvas extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 moverPara(x, y);
+//                linhaPara(400, 600);
                 invalidate();
+                Log.d("teste","Action was DOWN");
+                Log.d("X","" + event.getX());
+                Log.d("Y","" + event.getY());
                 break;
             case MotionEvent.ACTION_MOVE:
-                linhaPara(x, y);
+                mover(x, y);
                 invalidate();
+                Log.d("teste","Action was MOVE");
+                Log.d("X","" + event.getX());
+                Log.d("Y","" + event.getY());
+//                Log.d("X con cast","" + (int)event.getX());
+//                Log.d("Y com cast","" + (int)event.getY());
+                break;
+            case MotionEvent.ACTION_UP:
+                linhaPara();
+                invalidate();
+                Log.d("teste","Action was MOVE");
+                Log.d("X","" + event.getX());
+                Log.d("Y","" + event.getY());
+//                Log.d("X con cast","" + (int)event.getX());
+//                Log.d("Y com cast","" + (int)event.getY());
                 break;
         }
         return true;

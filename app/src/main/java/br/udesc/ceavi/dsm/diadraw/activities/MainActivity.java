@@ -14,7 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.udesc.ceavi.diadraw.activities.R;
-import br.udesc.ceavi.dsm.diadraw.Canvas;
+import br.udesc.ceavi.dsm.diadraw.ViewCanvas;
 import br.udesc.ceavi.dsm.diadraw.Conexao;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoApagar;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoDestino;
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fBtnChat;
     private FloatingActionButton fBtnBorracha;
 
-    private Canvas canvas;
+    private ViewCanvas viewCanvas;
 
     private ConstraintLayout constrainLayout;
     private boolean bApagar;
@@ -48,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
         iniciarConexao();
 
         constrainLayout = findViewById(R.id.lt);
-        constrainLayout.addView(canvas = new Canvas(this));
+        constrainLayout.addView(viewCanvas = new ViewCanvas(this));
         constrainLayout.setBackgroundColor(Color.RED);
 
 
-        canvas.invalidate();
+        viewCanvas.invalidate();
         constrainLayout.invalidate();
         constrainLayout.requestLayout();
 
@@ -83,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
         fBtnBorracha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(canvas.apaga) {
-                    canvas.apaga = false;
+                if(viewCanvas.apaga) {
+                    viewCanvas.apaga = false;
                 } else {
-                    canvas.apaga = true;
+                    viewCanvas.apaga = true;
                 }
-//                canvas.apagar();
+                viewCanvas.apagar();
 //                canvas.invalidate();
             }
         });
@@ -101,51 +101,51 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-
-        int action = event.getAction();
-
-        switch(action) {
-            case (MotionEvent.ACTION_DOWN) :
-                //define o ponto  onde o caminho começa
-                canvas.moverPara((int)event.getX(), (int)event.getY());
-                canvas.invalidate();
-
-                Log.d("teste","Action was DOWN");
-                return true;
-            case (MotionEvent.ACTION_MOVE) :
-                //desenha um caminho a partir do ponto inicial
-                canvas.linhaPara((int)event.getX(), (int)event.getY());
-                canvas.invalidate();
-
-                Log.d("teste","Action was MOVE");
-                Log.d("X","" + event.getX());
-                Log.d("Y","" + event.getY());
-                Log.d("X con cast","" + (int)event.getX());
-                Log.d("Y com cast","" + (int)event.getY());
-                return true;
-            case (MotionEvent.ACTION_UP) :
-
-                Log.d("teste","Action was UP");
-                return true;
-            case (MotionEvent.ACTION_CANCEL) :
-                Log.d("teste","Action was CANCEL");
-                return true;
-            case (MotionEvent.ACTION_OUTSIDE) :
-                Log.d("teste","Movement occurred outside bounds " +
-                        "of current screen element");
-                return true;
-            default :
-                return super.onTouchEvent(event);
-        }
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event){
+//
+//        int action = event.getAction();
+//
+//        switch(action) {
+//            case (MotionEvent.ACTION_DOWN) :
+//                //define o ponto  onde o caminho começa
+//                viewCanvas.moverPara((int)event.getX(), (int)event.getY());
+//                viewCanvas.invalidate();
+//
+//                Log.d("teste","Action was DOWN");
+//                return true;
+//            case (MotionEvent.ACTION_MOVE) :
+//                //desenha um caminho a partir do ponto inicial
+//                viewCanvas.linhaPara((int)event.getX(), (int)event.getY());
+//                viewCanvas.invalidate();
+//
+//                Log.d("teste","Action was MOVE");
+//                Log.d("X","" + event.getX());
+//                Log.d("Y","" + event.getY());
+//                Log.d("X con cast","" + (int)event.getX());
+//                Log.d("Y com cast","" + (int)event.getY());
+//                return true;
+//            case (MotionEvent.ACTION_UP) :
+//
+//                Log.d("teste","Action was UP");
+//                return true;
+//            case (MotionEvent.ACTION_CANCEL) :
+//                Log.d("teste","Action was CANCEL");
+//                return true;
+//            case (MotionEvent.ACTION_OUTSIDE) :
+//                Log.d("teste","Movement occurred outside bounds " +
+//                        "of current screen element");
+//                return true;
+//            default :
+//                return super.onTouchEvent(event);
+//        }
+//    }
 
     public void pintar() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                canvas.invalidate();
+                viewCanvas.invalidate();
                 Log.d("wsdsds", "repintar");
             }
         });
@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                canvas.invalidate();
+                viewCanvas.invalidate();
             }
         });
     }
