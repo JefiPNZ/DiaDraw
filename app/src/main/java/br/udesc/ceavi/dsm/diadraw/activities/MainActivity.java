@@ -1,6 +1,7 @@
 package br.udesc.ceavi.dsm.diadraw.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Canvas canvas;
 
     private ConstraintLayout constrainLayout;
+    private boolean bApagar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
         constrainLayout = findViewById(R.id.lt);
         constrainLayout.addView(canvas = new Canvas(this));
+        constrainLayout.setBackgroundColor(Color.RED);
+
 
         canvas.invalidate();
         constrainLayout.invalidate();
@@ -79,8 +83,13 @@ public class MainActivity extends AppCompatActivity {
         fBtnBorracha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                canvas.apagar();
-                canvas.invalidate();
+                if(canvas.apaga) {
+                    canvas.apaga = false;
+                } else {
+                    canvas.apaga = true;
+                }
+//                canvas.apagar();
+//                canvas.invalidate();
             }
         });
         fBtnChat.setOnClickListener(new View.OnClickListener() {
