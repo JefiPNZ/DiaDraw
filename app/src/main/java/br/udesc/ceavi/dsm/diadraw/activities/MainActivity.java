@@ -1,5 +1,6 @@
 package br.udesc.ceavi.dsm.diadraw.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,11 +15,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import br.udesc.ceavi.diadraw.activities.R;
+import br.udesc.ceavi.dsm.diadraw.EnumTipoPintura;
 import br.udesc.ceavi.dsm.diadraw.ViewCanvas;
 import br.udesc.ceavi.dsm.diadraw.Conexao;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoApagar;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoDestino;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoMovimento;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoPontoOrigem;
+import br.udesc.ceavi.dsm.diadraw.eventos.EventoTipoPintura;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoUserDisconected;
 import br.udesc.ceavi.dsm.diadraw.eventos.EventoUserJoined;
 import br.udesc.ceavi.dsm.diadraw.model.ModelUsuario;
@@ -36,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout constrainLayout;
     private boolean bApagar;
 
+    private ModelUsuario oUsuarioConectado;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         iniciarConexao();
 
         constrainLayout = findViewById(R.id.lt);
-        constrainLayout.addView(viewCanvas = new ViewCanvas(this));
-        constrainLayout.setBackgroundColor(Color.RED);
+        constrainLayout.addView(viewCanvas = new ViewCanvas(this, oUsuarioConectado));
+//        constrainLayout.setBackgroundColor(Color.RED);
 
 
         viewCanvas.invalidate();
@@ -74,7 +80,13 @@ public class MainActivity extends AppCompatActivity {
         socket.on(Conexao.USER_DISCONECTED, new EventoUserDisconected(this));//recebe as mensagens
         socket.on(Conexao.O_PONTO         , new EventoPontoOrigem(this));
         socket.on(Conexao.D_PONTO         , new EventoPontoDestino(this));
+        socket.on(Conexao.M_PONTO         , new EventoPontoMovimento(this));
         socket.on(Conexao.APAGAR          , new EventoApagar(this));
+        socket.on(Conexao.MUDANCA_PINTURA , new EventoTipoPintura(this));
+
+        oUsuarioConectado = new ModelUsuario(this);
+        oUsuarioConectado.setNome(login.getStringExtra("username"));
+        oUsuarioConectado.setCor(ModelUsuario.getCorAleatoria());
 
         oCon.conectarUsuario(login.getStringExtra("username"), ModelUsuario.getCorAleatoria());
     }
@@ -169,14 +181,33 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void enviarPontoDestino(final float x, final float y) {
+    public void enviarPontoDestino() {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                oCon.enviarPontoDestinoLinha(x, y);
+                oCon.enviarPontoDestinoLinha();
             }
         });
     }
+
+    public void enviarPontoMovimento(final float x, final float y) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oCon.enviarPontoMovimento(x, y);
+            }
+        });
+    }
+
+    public void solicitaMudancaPintura(final EnumTipoPintura tipo) {
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                oCon.solicitaMudancaPintura(tipo);
+            }
+        });
+    }
+
     public void apagarCaminho() {
         this.runOnUiThread(new Runnable() {
             @Override

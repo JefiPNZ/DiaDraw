@@ -29,6 +29,9 @@ public class Conexao {
     public static final String USER_CONECTED    = "uConectado";
     public static final String O_PONTO          = "ponto_origem";
     public static final String D_PONTO          = "ponto_destino";
+    public static final String M_PONTO          = "ponto_movimento";
+    public static final String MUDANCA_PINTURA  = "mudanca_pintura";
+    @Deprecated
     public static final String APAGAR           = "apagar";
 
     private HashMap<String, ModelUsuario> usuarios;
@@ -65,11 +68,12 @@ public class Conexao {
         oMensagem        = new EventoMensagem(oContext);
     }
 
-    private JSONObject getJsonObject(float x, float y) {
+    private JSONObject getJsonObject(String[] nameParams, Object[] valueParams) {
         JSONObject obj = new JSONObject();
         try {
-            obj.put("x", x);
-            obj.put("y", y);
+            for (int i = 0; i < valueParams.length; i++ ) {
+                obj.put(nameParams[i], valueParams[i]);
+            }
         } catch (Exception ex) {
             Log.e(TAG, "erro na atribuição de valor ao objeto json", ex);
         }
@@ -79,7 +83,7 @@ public class Conexao {
     private ModelUsuario getUsuario(String nome) {
         ModelUsuario usuario = null;
         if(!usuarios.containsKey(nome) && !nome.equals("")) {
-            usuario = new ModelUsuario();
+            usuario = new ModelUsuario(oContext);
             usuario.setNome(nome);
             adicionaUsuario(usuario);
         } else {
@@ -131,9 +135,19 @@ public class Conexao {
         usuario.setPontoInicial(x, y);
     }
 
-    public void atualizaPontoDestinoUsuario(String nome, float x, float y) {
+    public void atualizaPontoDestinoUsuario(String nome) {
         ModelUsuario usuario = getUsuario(nome);
-        usuario.setPontoLinhaDestino(x, y);
+        usuario.setPontoLinhaDestino();
+    }
+
+    public void atualizaPontoMovimentoUsuario(String nome, float x, float y) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.setPontoMover(x, y);
+    }
+
+    public void atualizaTipoPintura(String nome, EnumTipoPintura tipo) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.setTipoPintura(tipo);
     }
 
     public boolean possuiUsuario(String nome) {
@@ -153,6 +167,19 @@ public class Conexao {
         oSocket.off(MENSAGEM, oMensagem);
     }
 
+
+
+    public void apagarCaminhoUsuario(String nome) {
+        ModelUsuario usuario = getUsuario(nome);
+        usuario.setTipoPintura(EnumTipoPintura.APAGAR);
+    }
+
+    //Emissao de Eventos
+
+    public void conectarUsuario(String userName, int cor) {
+        oSocket.emit(ADD_USER, userName, cor);
+    }
+
     public void enviarMensagem(String sMen) {
         oSocket.emit(MENSAGEM, sMen);
     }
@@ -164,26 +191,26 @@ public class Conexao {
      * @param y
      */
     public void enviarPontoInicioLinha(float x, float y) {
-        oSocket.emit(O_PONTO, getJsonObject(x, y));
+        oSocket.emit(O_PONTO, getJsonObject(new String[]{"x", "y"}, new Object[]{x, y}));
+    }
+
+    public void enviarPontoMovimento(float x, float y) {
+        oSocket.emit(M_PONTO, getJsonObject(new String[]{"x", "y"}, new Object[]{x, y}));
     }
 
     /**
-     * Para onde a linha vai após o ponto inicial
+     * Ponto final da linha
      */
-    public void enviarPontoDestinoLinha(float x, float y) {
-        oSocket.emit(D_PONTO, getJsonObject(x, y));
-    }
-
-    public void apagarCaminhoUsuario(String nome) {
-        ModelUsuario usuario = getUsuario(nome);
-        usuario.apagarCaminho();
+    public void enviarPontoDestinoLinha() {
+        oSocket.emit(D_PONTO);
     }
 
     public void solicitaApagarCaminhoUsuario() {
         oSocket.emit(APAGAR);
     }
 
-    public void conectarUsuario(String userName, int cor) {
-        oSocket.emit(ADD_USER, userName, cor);
+    public void solicitaMudancaPintura(EnumTipoPintura tipo) {
+        oSocket.emit(MUDANCA_PINTURA, getJsonObject(new String[]{"tipo"}, new Object[]{tipo}));
     }
+
 }

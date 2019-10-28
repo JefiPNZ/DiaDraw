@@ -22,9 +22,8 @@ public class EventoPontoDestino extends Evento {
             JSONObject oDados = (JSONObject) args[0];
 
             String      sNome = oDados.getString("username");
-            JSONObject oPonto = oDados.getJSONObject("ponto");
 
-            Conexao.getInstance().atualizaPontoDestinoUsuario(sNome, oPonto.getInt("x"), oPonto.getInt("y"));
+            Conexao.getInstance().atualizaPontoDestinoUsuario(sNome);
 
             MainActivity m = (MainActivity) oContexto;
             m.pintar();

@@ -41,7 +41,7 @@ public class EventoUserJoined extends Evento {
 
     private void incluirUsuario(String nome, int cor) {
         Conexao oCon = Conexao.getInstance();
-        ModelUsuario usuario = new ModelUsuario();
+        ModelUsuario usuario = new ModelUsuario(oContexto);
         usuario.setNome(nome);
         usuario.setCor(cor);
 

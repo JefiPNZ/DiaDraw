@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
 
+@Deprecated
 public class EventoPintura extends Evento {
 
     private static final String TAG = "Pintura";

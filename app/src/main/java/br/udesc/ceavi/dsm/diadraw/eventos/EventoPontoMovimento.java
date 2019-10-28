@@ -1,5 +1,6 @@
 package br.udesc.ceavi.dsm.diadraw.eventos;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.util.Log;
 
@@ -8,12 +9,11 @@ import org.json.JSONObject;
 import br.udesc.ceavi.dsm.diadraw.Conexao;
 import br.udesc.ceavi.dsm.diadraw.activities.MainActivity;
 
-@Deprecated
-public class EventoApagar extends Evento {
+public class EventoPontoMovimento extends Evento {
 
-    private static final String TAG = "EventoApagar";
+    private static final String TAG = "PontoMovimento";
 
-    public EventoApagar(Context oContexto) {
+    public EventoPontoMovimento(Context oContexto) {
         super(oContexto);
     }
 
@@ -23,14 +23,15 @@ public class EventoApagar extends Evento {
             JSONObject oDados = (JSONObject) args[0];
 
             String      sNome = oDados.getString("username");
+            JSONObject oPonto = oDados.getJSONObject("ponto");
 
-            Conexao.getInstance().apagarCaminhoUsuario(sNome);
+            Conexao.getInstance().atualizaPontoMovimentoUsuario(sNome, oPonto.getInt("x"), oPonto.getInt("y"));
 
-            MainActivity m = (MainActivity)oContexto;
-            m.atualizaCanvas();
-
+            MainActivity m = (MainActivity) oContexto;
+            m.pintar();
         } catch (Exception ex) {
             Log.e(TAG, "erro", ex);
         }
     }
+
 }
