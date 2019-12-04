@@ -39,6 +39,27 @@ public class ViewCanvas extends View {
     protected void onDraw(android.graphics.Canvas canvas) {
         super.onDraw(canvas);
 
+        switch (usuario.getTipoPintura()) {
+            case NORMAL:
+                desenhaCaminhoOutrosUsu(canvas);
+
+                canvas.drawBitmap(usuario.getBitmap(), 0, 0, usuario.getPinturaBitmap());
+                canvas.drawPath(usuario.getCaminho(), usuario.getPintura());
+
+                break;
+            case APAGAR:
+                canvas.drawBitmap(usuario.getBitmap(), 0, 0, usuario.getPinturaBitmap());
+                canvas.drawPath(usuario.getCaminho(), usuario.getPintura());
+
+                desenhaCaminhoOutrosUsu(canvas);
+
+                break;
+        }
+//        canvas.drawColor(Color.argb(255, 255, 0, 0));
+
+    }
+
+    private void desenhaCaminhoOutrosUsu(android.graphics.Canvas canvas) {
         if(conex.getUsuarios().size() > 0) {
             Map<String, ModelUsuario> usuarios = conex.getUsuarios();
             for(Map.Entry<String, ModelUsuario> par : usuarios.entrySet()) {
@@ -50,11 +71,6 @@ public class ViewCanvas extends View {
                 canvas.drawPath(uCaminho, par.getValue().getPintura());
             }
         }
-//        canvas.drawColor(Color.argb(255, 255, 0, 0));
-        canvas.drawBitmap(usuario.getBitmap(), 0, 0, usuario.getPinturaBitmap());
-
-        canvas.drawPath(usuario.getCaminho(), usuario.getPintura());
-
     }
 
     public void linhaPara() {

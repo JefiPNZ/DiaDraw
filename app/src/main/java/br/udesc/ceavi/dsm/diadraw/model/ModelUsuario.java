@@ -37,6 +37,8 @@ public class ModelUsuario {
     private Canvas cvCanvas;
     private Bitmap bmBitmap;
 
+    private EnumTipoPintura tipoPintura;
+
     /*
     * pontos de controle
     */
@@ -136,10 +138,12 @@ public class ModelUsuario {
     public void setTipoPintura(EnumTipoPintura tipo) {
         switch (tipo) {
             case NORMAL:
+                this.tipoPintura = tipo;
                 this.pPintura.setXfermode(null);
                 this.pPintura.setStrokeWidth(5f);
                 break;
             case APAGAR:
+                this.tipoPintura = tipo;
                 this.pPintura.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 this.pPintura.setStrokeWidth(10f);
                 break;
@@ -148,5 +152,12 @@ public class ModelUsuario {
                 this.pPintura.setStrokeWidth(5f);
                 break;
         }
+    }
+
+    public EnumTipoPintura getTipoPintura() {
+        if(tipoPintura == null) {
+            tipoPintura = EnumTipoPintura.NORMAL;
+        }
+        return tipoPintura;
     }
 }
